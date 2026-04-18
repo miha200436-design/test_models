@@ -1,0 +1,392 @@
+{
+  "name": "process_next_client",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        -384
+      ],
+      "id": "e6cb6ef6-c504-4ce7-ab87-05249d98ab08",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "clients",
+          "mode": "list",
+          "cachedResultName": "clients"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $json.line_num }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -640,
+        -384
+      ],
+      "id": "b24a1c7d-5f5f-4523-8546-1d9952df7d50",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "0a9iNeNaUf12dvWF",
+          "name": "meseger"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "hzUuruxLiCaBTVMN",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/hzUuruxLiCaBTVMN",
+          "cachedResultName": "run_client_dialogue"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -304,
+        -384
+      ],
+      "id": "a08d85b5-fe2d-406f-a4c6-48b5319904cd",
+      "name": "Call 'run_client_dialogue'"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7a529084-c0e9-43ec-b794-0b2529790786",
+              "leftValue": "={{ $('Plus').item.json.line_num }}",
+              "rightValue": "={{ $('Init State').item.json.max_clients }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        -384
+      ],
+      "id": "3076e0a2-db70-4f35-92e7-778ae69c0385",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf527b1d-5833-40b2-84ec-18352aa1a946",
+              "name": "salon_name",
+              "value": "Салон красоты Glow",
+              "type": "string"
+            },
+            {
+              "id": "82a23dec-584c-4aa4-915f-b791a0ca041f",
+              "name": "line_num",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "id": "80edc1b9-804d-44a5-9622-c47fc63b6fd5",
+              "name": "model_name",
+              "value": "\"GigaChat 2 Pro\"",
+              "type": "string"
+            },
+            {
+              "id": "cf157806-3003-4aa3-903b-fec340d4e35d",
+              "name": "max_clients",
+              "value": 100,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1056,
+        -384
+      ],
+      "id": "912fc10b-984f-4c17-9ff9-2728a43b0e4f",
+      "name": "Init State"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d62d0a75-cf39-4f1d-9120-a1e1d0ea0d8b",
+              "name": "line_num",
+              "value": "={{ $json.line_num + 1}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -816,
+        -384
+      ],
+      "id": "0f57b5ea-9b36-412e-ac16-d9e10c2dc44c",
+      "name": "Plus"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7c91853-0b9e-43e0-9e35-b286665e4648",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "76313ebd-d7d4-4fbd-b69e-b62021587377",
+              "name": "client_name",
+              "value": "={{ $json.client_name }}",
+              "type": "string"
+            },
+            {
+              "id": "60d2aae3-df6a-4388-999a-a94db355383a",
+              "name": "client_prompt",
+              "value": "={{ $json.client_prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "26e00ece-4a26-40bf-860b-65c0c60168b1",
+              "name": "services_used",
+              "value": "={{ $json.services_used }}",
+              "type": "string"
+            },
+            {
+              "id": "97a9d421-b363-4648-bfb6-048f667f960b",
+              "name": "preferred_service",
+              "value": "={{ $json.preferred_service }}",
+              "type": "string"
+            },
+            {
+              "id": "e985fadf-0349-49f0-a95b-7ebdd0a54ce1",
+              "name": "months_absent",
+              "value": "={{ $json.months_absent }}",
+              "type": "number"
+            },
+            {
+              "id": "3a13590d-5453-455b-a5c6-fd6e351f40bd",
+              "name": "last_master",
+              "value": "={{ $json.last_master }}",
+              "type": "string"
+            },
+            {
+              "id": "ab5a2202-05df-4d21-b564-5f3ff2b437c2",
+              "name": "offer_for_client",
+              "value": "={{ $json.offer_for_client }}",
+              "type": "string"
+            },
+            {
+              "id": "7c0958c0-0d99-40e9-b1d3-0a99863de170",
+              "name": "communication_style",
+              "value": "={{ $json.communication_style }}",
+              "type": "string"
+            },
+            {
+              "id": "0ba0992f-9909-452b-84b0-3e5ff06dbaba",
+              "name": "objection_type",
+              "value": "={{ $json.objection_type }}",
+              "type": "string"
+            },
+            {
+              "id": "68c0f4f8-503f-4a9c-94e5-3f4d688b3013",
+              "name": "model_name",
+              "value": "={{ $('Init State').item.json.model_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        -384
+      ],
+      "id": "dca517ba-cf64-4d88-9782-9e51eca6840b",
+      "name": "Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b88b1096-347c-4bb3-9a9f-f7f53fc4b685",
+              "name": "=line_num",
+              "value": "={{ $('Plus').item.json.line_num }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -288
+      ],
+      "id": "52fc53f5-e8d8-4622-b9a0-677e203d0f9c",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Init State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "node": "Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'run_client_dialogue'": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init State": {
+      "main": [
+        [
+          {
+            "node": "Plus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plus": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Out": {
+      "main": [
+        [
+          {
+            "node": "Call 'run_client_dialogue'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Plus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "e921c37b-d6b6-4774-bc76-e644793d4c40",
+  "meta": {
+    "instanceId": "1660243df3530f48cbe1b14a29e7ef62a2b1f0c060a5ab49431065e78eb707c5"
+  },
+  "id": "_774qHmwOkiriMXJtG4SW",
+  "tags": []
+}

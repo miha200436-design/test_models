@@ -1,0 +1,226 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "30da7097-b23b-4644-ae74-dbfc333b143c",
+      "name": "When chat message received",
+      "webhookId": "db162e47-273b-452c-a5f7-327f71bc006e"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "data0",
+        "options": {
+          "delimiter": ","
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        576,
+        0
+      ],
+      "id": "dece3335-f479-424c-a7cd-a350dc62cfef",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "clients",
+          "mode": "list",
+          "cachedResultName": "clients"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "months_absent": "={{ $json['Не был: месяцев'] }}",
+            "client_name": "={{ $json['﻿Имя'] }}",
+            "client_prompt": "={{ $json['Максимально подробный промт'] }}",
+            "services_used": "={{ $json['Услуги использовал'] }}",
+            "preferred_service": "={{ $json['Предпочтение'] }}",
+            "last_master": "={{ $json['Мастер'] }}",
+            "offer_for_client": "={{ $json['Акция: какую предложить'] }}",
+            "communication_style": "={{ $json['Стиль: Стиль общения'] }}",
+            "objection_type": "={{ $json['Возражение'] }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "client_prompt",
+              "displayName": "client_prompt",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "services_used",
+              "displayName": "services_used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "preferred_service",
+              "displayName": "preferred_service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_visit_date",
+              "displayName": "last_visit_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "months_absent",
+              "displayName": "months_absent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_master",
+              "displayName": "last_master",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "offer_for_client",
+              "displayName": "offer_for_client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "communication_style",
+              "displayName": "communication_style",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "objection_type",
+              "displayName": "objection_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        784,
+        0
+      ],
+      "id": "36abed73-1b0d-4169-812b-8621f580f84f",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "0a9iNeNaUf12dvWF",
+          "name": "meseger"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "7e98958c-2b27-45a0-a767-eb3860159262",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1660243df3530f48cbe1b14a29e7ef62a2b1f0c060a5ab49431065e78eb707c5"
+  },
+  "id": "Mr5QqBxZnkgASTbRF2_Yt",
+  "tags": []
+}

@@ -1,0 +1,646 @@
+{
+  "name": "run_client_dialogue",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "client_name"
+            },
+            {
+              "name": "client_prompt"
+            },
+            {
+              "name": "services_used"
+            },
+            {
+              "name": "preferred_service"
+            },
+            {
+              "name": "months_absent"
+            },
+            {
+              "name": "last_master"
+            },
+            {
+              "name": "offer_for_client"
+            },
+            {
+              "name": "communication_style"
+            },
+            {
+              "name": "objection_type"
+            },
+            {
+              "name": "model_name"
+            },
+            {
+              "name": "id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1552,
+        -1216
+      ],
+      "id": "29e7c58c-ab43-436c-a710-625439e5b3db",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты — администратор салона красоты.\n\nТвоя задача — вести переписку с клиентом естественно, спокойно и профессионально, чтобы максимум за 10 сообщений довести диалог до одного из понятных итогов:\n- запись\n- выбор времени\n- согласие получить варианты времени\n- просьба написать позже в более конкретной форме\n- отказ\n\nТвоя цель — не давить, а помочь клиенту принять ясное решение. Диалог не должен зависать в неопределенности.\n\nКонтекст клиента:\nИмя: {{ $json.client_name }}\nОписание клиента: {{ $json.client_description }}\nПодробный профиль: {{ $json.client_prompt }}\nУслуги использовал: {{ $json.services_used }}\nПредпочтение: {{ $json.preferred_service }}\nНе был: {{ $json.months_absent }} месяцев\nМастер: {{ $json.last_master }}\nАкция: {{ $json.offer_for_client }}\nСтиль общения: {{ $json.communication_style }}\nВозражение: {{ $json.objection_type }}\n\nИстория:\n{{ $json.conversation_as_text }}\n\nПравила:\n- если это первое сообщение, поздоровайся, представься как администратор, напомни, что клиент был у вас раньше, и предложи релевантный повод вернуться\n- если диалог уже идет, не здоровайся повторно и не начинай разговор заново\n- отвечай точно по смыслу сообщения клиента\n- учитывай его настроение, возражение, характер и контекст\n- если клиент сомневается, снижай риск и не дави\n- если клиент задает вопрос, отвечай прямо, кратко и по делу\n- если клиент уходит в детали, кратко ответь и мягко верни к следующему шагу\n- не повторяйся\n- не выдумывай факты, которых нет в контексте\n- пиши как живой человек, а не как бот\n- не спорь с отказом и не продавливай запись\n\nОчень важно:\n- клиент не должен уходить из диалога в размытые формулировки вроде:\n  - \"если решусь, напишу\"\n  - \"пока подумаю\"\n  - \"может быть потом\"\n- если клиент начинает отвечать неопределенно, твоя задача — мягко перевести его к более ясному варианту:\n  - предложить прислать варианты времени без обязательства\n  - уточнить, удобнее ли вернуться к разговору позже\n  - помочь обозначить, что сейчас неактуально\n  - довести до мягкого, но понятного решения\n\nЛогика ведения:\n- в начале установи контакт и предложи уместный повод вернуться\n- в середине отвечай на сомнения и снижай барьеры\n- после 5–7 сообщений обязательно двигай к ясному исходу\n- если клиент уклоняется, используй мягкое закрытие через два простых варианта\n- не оставляй диалог в подвешенном состоянии, если уже было несколько сообщений\n\nЕсли клиент пишет что-то вроде:\n- \"я подумаю\"\n- \"если решусь, напишу\"\n- \"пока не знаю\"\n- \"может быть позже\"\n\nто не завершай диалог на этом. Мягко уточни следующий шаг так, чтобы клиенту было легко выбрать:\n- прислать варианты времени\n- написать позже\n- зафиксировать, что сейчас неактуально\n\nЧто считается хорошим ответом:\n- конкретный\n- спокойный\n- короткий\n- с уважением к клиенту\n- с мягким движением к решению\n\nЧто считается плохим ответом:\n- повтор приветствия\n- игнор вопроса клиента\n- повтор одного и того же предложения\n- слишком раннее давление на запись\n- слишком рекламный тон\n- завершение диалога без ясного исхода\n\nОграничения:\n- 1–3 коротких абзаца\n- максимум 1 вопрос\n- без списков\n- без markdown\n- только сообщение администратора\n\nСгенерируй только следующее сообщение администратора.",
+        "options": {
+          "systemMessage": "Тебе важно уговорить клиента"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1024,
+        -1216
+      ],
+      "id": "91efe47a-b3b7-4929-9bcc-69b4c7137e6f",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты играешь роль реального клиента салона красоты в переписке с администратором.\n\nТвоя цель — отвечать естественно, последовательно и психологически правдоподобно, опираясь на данные о себе. Ты не помогаешь администратору и не стараешься специально “сделать тест удобным”. Ты ведешь себя как обычный человек, у которого есть свои эмоции, ограничения, сомнения, интересы и границы.\n\nИспользуй этот профиль клиента как основу поведения:\n\nИмя: {{ $('When Executed by Another Workflow').item.json.client_name }}\nОписание клиента: {{ $('When Executed by Another Workflow').item.json.client_description }}\nУслуги использовал: {{ $('When Executed by Another Workflow').item.json.services_used }}\nПредпочтение: {{ $('When Executed by Another Workflow').item.json.preferred_service }}\nНе был: {{ $('When Executed by Another Workflow').item.json.months_absent }} месяцев\nМастер: {{ $('When Executed by Another Workflow').item.json.last_master }}\nАкция: {{ $('When Executed by Another Workflow').item.json.offer_for_client }}\nСтиль общения: {{ $('When Executed by Another Workflow').item.json.communication_style }}\nВозражение: {{ $('When Executed by Another Workflow').item.json.objection_type }}\nПодробный психологический профиль: {{ $('When Executed by Another Workflow').item.json.client_prompt }}\n\nИстория переписки на текущий момент:\n{{ $json.conversation_as_text }}\n\nТвои правила поведения:\n\n1. Всегда отвечай как клиент, а не как ассистент.\nНе объясняй свои намерения, не комментируй логику, не описывай свою роль, не анализируй диалог.\n\n2. Опирайся на данные профиля.\nТвои ответы должны соответствовать:\n- характеру клиента\n- его текущему эмоциональному состоянию\n- причине отсутствия\n- главному возражению\n- стилю общения\n- отношению к салону, услуге и мастеру\n\n3. Реагируй на последнее сообщение администратора по смыслу.\nЕсли администратор отвечает уместно, конкретно и спокойно, твое сопротивление может постепенно снижаться.\nЕсли администратор давит, игнорирует твои слова, повторяется или звучит неестественно, ты усиливаешь дистанцию, сомнение или отказ.\n\n4. Поведение должно быть реалистичным.\nТы можешь:\n- сомневаться\n- задавать уточняющие вопросы\n- откладывать решение\n- выражать интерес без согласия\n- соглашаться только после достаточных оснований\n- отказываться, если тебе некомфортно\n\n5. Не соглашайся слишком быстро без причины.\nСогласие должно выглядеть заслуженным.\nОбычно клиент идет к согласию только если:\n- администратор отвечает по делу\n- не давит\n- снимает ключевое возражение\n- предлагает понятный и безопасный следующий шаг\n\n6. У тебя не всегда одна и та же цель.\nВ зависимости от профиля ты можешь:\n- быть открыт к возвращению\n- быть нейтрален\n- быть раздражен\n- быть вежливо закрыт\n- быть агрессивен\n- быть недоверчив\n- быть ограничен по деньгам, времени или географии\n\n7. Не зависай бесконечно в неопределенности.\nПереписка должна прийти к одному из естественных исходов максимум за 10 сообщений клиента:\n- согласие на следующий шаг\n- согласие на запись\n- конкретная просьба написать позже\n- вежливый отказ\n- жесткий отказ\n- прекращение интереса\n\n8. Очень важно:\nразмытые финалы не допускаются, если диалог уже близок к завершению.\nФразы вроде:\n- \"если решусь, напишу\"\n- \"пока подумаю\"\n- \"может быть потом\"\n- \"там видно будет\"\nне считаются допустимым финалом.\n\nЕсли ты хочешь отложить решение, формулируй это конкретнее и естественнее, например:\n- \"Давайте лучше на следующей неделе вернемся к этому\"\n- \"Сейчас не готова записываться, можете написать позже\"\n- \"Пока неактуально, спасибо\"\n- \"Если будет актуально, сама уже вернусь\"\n\n9. Если твой профиль предполагает отказ, не нужно “ломаться” ради теста.\nЕсли администратор ведет диалог плохо, ты не обязан соглашаться.\nЕсли профиль указывает на сильный негатив, переезд, отсутствие денег, недоверие или раздражение, это должно влиять на исход.\n\n10. Если твой профиль допускает возврат, не отказывай автоматически.\nПри хорошем диалоге ты можешь:\n- попросить варианты времени\n- согласиться посмотреть окна\n- спросить про мастера или цену\n- согласиться записаться\n\n11. Если диалог уже длится несколько сообщений, ты должен становиться определеннее.\nК концу сценария ты обязан выбрать понятную позицию:\n- да\n- скорее да, но с конкретным следующим шагом\n- позже, но более конкретно\n- нет\n\n12. Соблюдай естественный стиль мессенджера.\nПиши как живой человек:\n- коротко\n- разговорно\n- без канцелярита\n- без длинных монологов\n- без лишних пояснений\n\n13. Формат ответа:\n- только одно сообщение клиента\n- без кавычек\n- без markdown\n- без списков\n- без пометок вроде “Клиент:”\n- без объяснений вне роли\n\nДополнительная логика принятия решения:\n- если администратор попал в твой контекст, ответил на сомнение и предложил удобный следующий шаг, ты можешь смягчиться\n- если администратор пропускает твое возражение и продолжает продавать, ты отдаляешься\n- если тебе не подходит услуга, мастер, время, цена или сам факт контакта, скажи об этом прямо или косвенно — в рамках своего характера\n- если ты раздражен рекламой, реагируй на навязчивость сильнее, чем на нейтральное сообщение\n- если ты недоволен прошлым опытом, не забывай про этот фон\n- если ты переехал, уехал или физически не можешь прийти, веди себя соответственно\n- если у тебя нет денег, ты можешь интересоваться акцией, но не обязан соглашаться\n- если ты склонен к грубости, допускается резкость, но ответ все равно должен выглядеть как живой ответ человека, а не как карикатура\n\nЧто считать хорошим следующим шагом со стороны администратора:\n- предложить удобные окна\n- уточнить комфортный день\n- ответить на вопрос о мастере\n- дать понятную информацию по услуге\n- спокойно предложить вернуться без давления\n\nЧто считать плохим поведением администратора:\n- повторяет одно и то же\n- игнорирует твой ответ\n- слишком рано давит на запись\n- звучит как массовая реклама\n- не учитывает твой контекст\n\nСейчас сгенерируй только следующее сообщение клиента.",
+        "options": {
+          "systemMessage": "Ты немного занят, не любишь навязчивость и не спешишь записываться в салон красоты."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -560,
+        -1216
+      ],
+      "id": "a4168f5f-047f-40bb-ae9c-fe6701d73d39",
+      "name": "AI Agent1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты — контролер диалога между администратором клиники и клиентом.\n\nТвоя задача:\n1. Проверить, согласился ли клиент записаться.\n2. Проверить, не достигнут ли лимит: 10 циклов общения.\n3. Вернуть только JSON без markdown и без пояснений.\n\nСчитать, что клиент согласен записаться, если в его репликах есть явное согласие, например:\n- давайте запишемся\n- да, можно записаться\n- хорошо, запишите\n- да, мне подходит\n- давайте выберем время\n\nВерни строго один из вариантов:\n\n{\n  \"stop\": true,\n  \"reason\": \"booking_confirmed\"\n}\n\nили\n\n{\n  \"stop\": true,\n  \"reason\": \"max_turns_reached\"\n}\n\nили\n\n{\n  \"stop\": false,\n  \"reason\": \"\"\n}\n\nДанные:\n{{ $json.turn_count }}\n\nСобщение клиента:\n{{ $json.last_client_message }}",
+        "options": {
+          "systemMessage": "Ты отвечаешь только валидным JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -1216
+      ],
+      "id": "7affeb3b-e4a8-48d5-b264-252d3379e37a",
+      "name": "Judge Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const state = JSON.parse(JSON.stringify($('Save Client Message').first().json));\nconst judgeNode = $('Judge Agent').first().json;\n\n// дефолты\nstate.turn_count = Number(state.turn_count || 0);\nstate.max_turns = Number(state.max_turns || 10);\n\nstate.decision_result = false;\nstate.decision_text = \"\";\nstate.stop = false;\nstate.stop_reason = \"\";\n\n// 1. сначала решение Judge Agent\nlet verdict = null;\nlet raw = judgeNode.output || \"\";\n\nif (typeof raw === \"string\") {\n  const match = raw.match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    try {\n      verdict = JSON.parse(match[0]);\n    } catch (e) {\n      verdict = null;\n    }\n  }\n} else if (typeof raw === \"object\" && raw !== null) {\n  verdict = raw;\n}\n\nif (verdict && verdict.stop === true) {\n  state.stop = true;\n  state.stop_reason = verdict.reason || \"judge_stopped\";\n\n  if (verdict.reason === \"booking_confirmed\") {\n    state.decision_result = true;\n    state.decision_text = \"booking_confirmed\";\n  } else {\n    state.decision_result = false;\n    state.decision_text = verdict.reason || \"\";\n  }\n\n  return [{ json: state }];\n}\n\n// 2. потом лимит циклов\nif (state.turn_count >= state.max_turns) {\n  state.decision_result = false;\n  state.decision_text = \"max_turns_reached\";\n  state.stop = true;\n  state.stop_reason = \"max_turns_reached\";\n\n  return [{ json: state }];\n}\n\n// 3. продолжаем цикл\nreturn [{ json: state }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -1216
+      ],
+      "id": "3beb8310-63c4-4ca4-a33e-7aeb54a1d644",
+      "name": "Parse Judge Result",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "25287a4f-3a4c-4530-a8e3-86c6808d5c6d",
+              "leftValue": "={{ $json.stop }}",
+              "rightValue": "is true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        -1216
+      ],
+      "id": "663422c0-db88-45df-8f35-de8683511acb",
+      "name": "If",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "dialogues",
+          "mode": "list",
+          "cachedResultName": "dialogues"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "client_id": "={{ $('Edit Fields').item.json.client_id }}",
+            "turn_count": "={{ $('Parse Judge Result').item.json.turn_count }}",
+            "model_name": "={{ $('Edit Fields').item.json.model_name }}",
+            "conversation_text": "={{ $('Parse Judge Result').item.json.conversation_as_text }}",
+            "booking_confirmed": "={{ $('Parse Judge Result').item.json.decision_result }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "client_id",
+              "displayName": "client_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "model_name",
+              "displayName": "model_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "conversation_text",
+              "displayName": "conversation_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "turn_count",
+              "displayName": "turn_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "booking_confirmed",
+              "displayName": "booking_confirmed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        960,
+        -1232
+      ],
+      "id": "ba1bfa4a-ca95-4aba-9bbc-605364c95488",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "0a9iNeNaUf12dvWF",
+          "name": "meseger"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "49d8d167-54e1-41fc-8bdd-9305eb07a18c",
+              "name": "client_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "981b6c63-482b-4e8c-83e3-963848913703",
+              "name": "client_name",
+              "value": "={{ $json.client_name }}",
+              "type": "string"
+            },
+            {
+              "id": "51fbdc05-a491-40d9-9d41-5e6abf1a7997",
+              "name": "client_prompt",
+              "value": "={{ $json.client_prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "82387e49-3362-44b3-aec9-cda4edae578f",
+              "name": "services_used",
+              "value": "={{ $json.services_used }}",
+              "type": "string"
+            },
+            {
+              "id": "7279321b-b9b3-49ad-8ea3-137a58bae98e",
+              "name": "preferred_service",
+              "value": "={{ $json.preferred_service }}",
+              "type": "string"
+            },
+            {
+              "id": "5097b5bf-6fe8-499c-9647-df9a32dd051c",
+              "name": "months_absent",
+              "value": "={{ $json.months_absent }}",
+              "type": "string"
+            },
+            {
+              "id": "c661ce71-cdac-4c17-83e1-3aedf96f6497",
+              "name": "last_master",
+              "value": "={{ $json.last_master }}",
+              "type": "string"
+            },
+            {
+              "id": "f91d296c-cf74-4fa6-adef-c49d27d996fe",
+              "name": "offer_for_client",
+              "value": "={{ $json.offer_for_client }}",
+              "type": "string"
+            },
+            {
+              "id": "5bd780ca-53ef-4c9a-9f08-783f893a03d1",
+              "name": "communication_style",
+              "value": "={{ $json.communication_style }}",
+              "type": "string"
+            },
+            {
+              "id": "39c6131c-e6cd-421c-9edf-d60263fd8d2f",
+              "name": "objection_type",
+              "value": "={{ $json.objection_type }}",
+              "type": "string"
+            },
+            {
+              "id": "962d5714-d9fb-476b-b4e9-8bb4317dc8d0",
+              "name": "model_name",
+              "value": "={{ $json.model_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e1f708f8-290c-466f-b961-c14dfd8c8cc1",
+              "name": "conversation_as_text",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "82d330c3-c8eb-49a2-970d-43068bf72b55",
+              "name": "turn_count",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "9f930148-5bf4-46b5-8062-31a8376b0555",
+              "name": "max_turns",
+              "value": 10,
+              "type": "number"
+            },
+            {
+              "id": "a1c3f7a4-052f-4965-b236-252dd2caeac5",
+              "name": "stop",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "365b4995-e9c3-44a6-b66c-a9667fbc3bda",
+              "name": "stop_reason",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1344,
+        -1216
+      ],
+      "id": "c0f26a50-2d2a-4723-969e-311a9154b0a8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -976
+      ],
+      "id": "2a617bbe-aebf-4e34-95a1-c32b33f3a6c1",
+      "name": "DeepSeek Chat Model1",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "NnmHpOtAQjszaQmr",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -1008
+      ],
+      "id": "b49c4af6-9ab0-4c65-aed9-72348fca19fb",
+      "name": "DeepSeek Chat Model2",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "NnmHpOtAQjszaQmr",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let prev;\n\ntry {\n  prev = $('Parse Judge Result').first().json;\n} catch (e) {\n  prev = $('Edit Fields').first().json;\n}\n\nconst admin = $('AI Agent').first().json;\nconst state = JSON.parse(JSON.stringify(prev));\n\nstate.turn_count = Number(state.turn_count || 0);\nstate.max_turns = Number(state.max_turns || 10);\nstate.conversation_as_text = state.conversation_as_text || \"\";\nstate.stop = false;\nstate.stop_reason = \"\";\n\nconst adminText = (admin.output || \"\").trim();\n\nstate.last_admin_message = adminText;\nstate.conversation_as_text =\n  state.conversation_as_text +\n  (state.conversation_as_text ? \"\\n\\n\" : \"\") +\n  \"Администратор: \" + adminText;\n\nreturn [{ json: state }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        -1216
+      ],
+      "id": "0ed3bffa-8f78-45c3-8243-4eb6a53cd4ba",
+      "name": "Save Admin Message"
+    },
+    {
+      "parameters": {
+        "jsCode": "const prev = $('Save Admin Message').first().json;\nconst client = $('AI Agent1').first().json;\n\nconst state = JSON.parse(JSON.stringify(prev));\n\nstate.turn_count = Number(state.turn_count || 0);\nstate.max_turns = Number(state.max_turns || 10);\nstate.conversation_as_text = state.conversation_as_text || \"\";\n\nconst clientText = (client.output || \"\").trim();\n\nstate.turn_count += 1;\nstate.last_client_message = clientText;\nstate.conversation_as_text =\n  state.conversation_as_text +\n  (state.conversation_as_text ? \"\\n\\n\" : \"\") +\n  \"Клиент: \" + clientText;\n\nreturn [{ json: state }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -1216
+      ],
+      "id": "ed862308-025e-4f0d-bf67-fa56634eff6e",
+      "name": "Save Client Message"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        -848
+      ],
+      "id": "26c66c48-8fb4-476e-8409-ffeda7787e68",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Kr7e4Yqa0Mf6fZJJ",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "GigaChat-2-Max",
+        "options": {}
+      },
+      "type": "n8n-nodes-gigachat.lmGigaChat",
+      "typeVersion": 1,
+      "position": [
+        -1024,
+        -960
+      ],
+      "id": "16473ed2-6bb7-4635-a699-068bdc3a158a",
+      "name": "GigaChat Model",
+      "credentials": {
+        "gigaChatApi": {
+          "id": "WQ6HIiwKvQ0MFmeK",
+          "name": "GigaChat account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Save Admin Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Save Client Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Judge Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Judge Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Judge Result": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Judge Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Admin Message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Client Message": {
+      "main": [
+        [
+          {
+            "node": "Judge Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "GigaChat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "4ff224a1-844d-4169-8956-590290627862",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1660243df3530f48cbe1b14a29e7ef62a2b1f0c060a5ab49431065e78eb707c5"
+  },
+  "id": "hzUuruxLiCaBTVMN",
+  "tags": []
+}
